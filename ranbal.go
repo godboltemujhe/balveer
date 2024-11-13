@@ -155,11 +155,24 @@ func usage() {
 }
 
 // Function to check if IP is local or invalid
+// Function to check if IP is local or invalid
 func isLocalOrInvalidIP(ip string) bool {
-	return ip == "0.0.0.0" || ip == "127.0.0.1" ||
-		ip[:8] == "192.168." || ip[:7] == "10.0.0." ||
-		ip[:7] == "172.16."
+	if len(ip) >= 8 {
+		// Check if it's a local IP address
+		if ip == "0.0.0.0" || ip == "127.0.0.1" || ip[:8] == "192.168." || ip[:7] == "10.0.0." || ip[:7] == "172.16." {
+			return true
+		}
+	} else if len(ip) >= 7 {
+		// Handle case for shorter IP addresses like "8.8.8.8"
+		if ip[:7] == "172.16." {
+			return true
+		}
+	}
+
+	// If it's not any of these cases, return false
+	return false
 }
+
 
 func main() {
 	actualName := os.Args[0]
