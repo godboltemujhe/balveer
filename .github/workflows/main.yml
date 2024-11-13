@@ -1,4 +1,3 @@
-
 name: Run MyBot Workflow
 
 on:
@@ -24,30 +23,32 @@ jobs:
         run: |
           chmod +x balveer.sh MrRanDom8
 
-      - name: Set permissions for balveer.sh and ranbal binary
+      - name: Set permissions for all executables
         run: |
           chmod +x *
-
-      - name: Set permissions for balveer.sh and ranbal binary
-        run: |
-          chmod +x MrRanDom8    
 
       - name: Run balveer.sh for dependencies (one-time setup)
         run: |
           sh balveer.sh
 
-      - name: for Increase file descriptor limit 
-        run: ulimit -n 4096 || true 
+      - name: Increase file descriptor limit
+        run: |
+          ulimit -n 4096 || true
 
-      - name: for max socket buffer size
-        run: sudo sysctl -w kern.ipc.maxsockbuf=6291456 || true
+      - name: Increase max UDP socket buffer size
+        run: |
+          sudo sysctl -w kern.ipc.maxsockbuf=12582912 || true
+          sudo sysctl -w net.core.rmem_max=12582912 || true
+          sudo sysctl -w net.core.wmem_max=12582912 || true
 
-      - name: soul.c into binary
-        run: go build ranbal.go
+      - name: Compile ranbal binary
+        run: |
+          go build ranbal.go
 
-      - name: soul.c into binary 
-        run: shasum -a 256 ranbal > key.txt                
-        
-      - name: execution of MrRanDom8
-        run: | 
-          ./MrRanDom8 
+      - name: Generate checksum for ranbal binary
+        run: |
+          shasum -a 256 ranbal > key.txt
+
+      - name: Execute MrRanDom8
+        run: |
+          ./MrRanDom8
