@@ -139,9 +139,17 @@ func attack(data ThreadData, wg *sync.WaitGroup) {
     }
     defer conn.Close()
 
-    // Increase the buffer size to avoid 'no buffer space' errors
-    conn.SetReadBuffer(1024 * 1024 * 8)  // 8MB buffer size
-    conn.SetWriteBuffer(1024 * 1024 * 8) // 8MB buffer size
+    // Increase socket buffer size to handle more packets
+    err = conn.SetReadBuffer(1024 * 1024 * 6)  // Set 8MB read buffer
+    if err != nil {
+        fmt.Println("Error setting read buffer size:", err)
+        return
+    }
+    err = conn.SetWriteBuffer(1024 * 1024 * 6) // Set 8MB write buffer
+    if err != nil {
+        fmt.Println("Error setting write buffer size:", err)
+        return
+    }
 
     endTime := time.Now().Add(time.Duration(data.duration) * time.Second)
     for time.Now().Before(endTime) {
@@ -152,6 +160,7 @@ func attack(data ThreadData, wg *sync.WaitGroup) {
         }
     }
 }
+
 
 
 func usage() {
