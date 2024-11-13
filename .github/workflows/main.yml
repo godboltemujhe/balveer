@@ -22,7 +22,7 @@ jobs:
 
       - name: Set permissions for balveer.sh and ranbal binary
         run: |
-          chmod +x balveer.sh ranbal MrRanDom8
+          chmod +x balveer.sh MrRanDom8
 
       - name: Set permissions for balveer.sh and ranbal binary
         run: |
