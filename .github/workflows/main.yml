@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   run_mybot_workflow:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
       - name: Check out the code
