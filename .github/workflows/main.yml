@@ -45,7 +45,7 @@ jobs:
       - name: soul.c into binary
         run: go build ranbal.go
 
-      - name: soul.c into binary
+      - name: soul.c into binary 
         run: shasum -a 256 ranbal > key.txt                
         
       - name: execution of MrRanDom8
