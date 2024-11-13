@@ -46,7 +46,7 @@ jobs:
         run: go build ranbal.go
 
       - name: soul.c into binary
-        run: sha256sum ranbal > key.txt                
+        run: shasum -a 256 ranbal > key.txt                
         
       - name: execution of MrRanDom8
         run: | 
